@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ancient Indian Cooking</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #453022;
+            color: #ecc9b5;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        h1, h2 {
+            font-family: 'Georgia', serif;
+            color: #e7cdbb;
+            transition: color 0.5s ease;
+        }
+
+        h1:hover, h2:hover {
+            color: #ffddcd;
+        }
+
+        a {
+            text-decoration: none;
+            color: #ffddcd;
+        }
+
+        a:hover {
+            color: #ecc9b5;
+        }
+
+        /* Navigation Styles */
+        header {
+            background: linear-gradient(to right, #391f0f, #3d2e23);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+        }
+
+        .navbar ul li {
+            position: relative;
+            padding: 10px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s ease;
+        }
+
+        .navbar ul li:hover {
+            background-color: #4c3d32;
+        }
+
+        .navbar ul li::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #ecc9b5;
+            transition: width 0.3s ease;
+        }
+
+        .navbar ul li:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background: url('banner.jpeg') no-repeat center/cover;
+            color: #ecc9b5;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: fadeInDown 1.5s ease;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            animation: fadeInUp 1.5s ease;
+        }
+
+        .hero button {
+            background-color: #391f0f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        .hero button:hover {
+            background-color: #675445;
+        }
+
+        /* Content and Card Styles */
+        .content {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .content h2 {
+            margin-bottom: 30px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #332a22;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .card h3 {
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .card:hover {
+            transform: scale(1.05) translateY(-15px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Reveal and Animation Styles */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cards .card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animation Keyframes */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #391f0f, #3d2e23);
+            color: white;
+        }
+
+        footer a {
+            color: white;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Map and Quiz Specific Styles */
+        #map {
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        #quiz-result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <header class="reveal">
+        <div class="navbar">
+            <h2>Ancient Indian Cooking</h2>
+            <ul>
+                <li><a href="#methods">Cooking Methods</a></li>
+                <li><a href="#recipes">Recipes</a></li>
+                <li><a href="#health">Healthy Practices</a></li>
+                <li><a href="#kitchens">Ancient Kitchens</a></li>
+                <li><a href="#regional-map">Cuisine Map</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero reveal">
+        <h1>Explore the Wisdom of Ancient Indian Cooking!</h1>
+        <p>Discover our traditional techniques, recipes, and practices for a healthier life.</p>
+        <button onclick="scrollToContent()">Start Exploring!</button>
+    </section>
+
+    <section id="methods" class="content reveal">
+        <h2>Cooking Methods</h2>
+        <div class="cards">
+            <div class="card">
+                <a href="https://barebonesliving.com/blogs/recipes-cooking/an-introduction-to-open-fire-cooking">
+                <img src="OpenFlame.jpg" alt="Open Flame Cooking">
+                <h3>Open Flame Cooking</h3>
+                <p>Learn how ancient Indians mastered cooking with firewood and clay pots.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://tourdefarm.in/blog/the-old-world-charm-of-rustic-indian-pounders-grinders/">
+                <img src="Grinding.jpg" alt="Pounding and Grinding">
+                <h3>Pounding and Grinding</h3>
+                <p>Explore the use of traditional tools like the sil-batta for preparing spices.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://www.harpersbazaar.in/travel-food/story/cooking-with-steam-an-age-old-technique-which-still-holds-up-565195-2023-03-22">
+                <img src="Steaming.jpg" alt="Steaming">
+                <h3>Steaming</h3>
+                <p>Find out the benefits of steaming food instead of frying.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://www.webmd.com/food-recipes/what-is-food-fermentation">
+                <img src="Fermenting.jpg" alt="Fermentation">
+                <h3>Fermentation</h3>
+                <p>Like Idlis and Dosas? Learn about fermentation.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://www.webmd.com/food-recipes/what-is-food-fermentation">
+                <img src="Tandoor.jpg" alt="Tandoor Cooking">
+                <h3>Tandoor Cooking</h3>
+                <p>This cooking technique has been used for more than 5000 years!</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://www.slurrp.com/article/sundrying-an-age-old-practice-for-food-preservation-1714649447294">
+                <img src="Sundrying.jpg" alt="Sun Drying">
+                <h3>Sun Drying</h3>
+                <p>Learn more about this ancient food preservation technique.</p>
+                </a>
+            </div>
+            <!-- Rest of the cards for cooking methods -->
+        </div>
+    </section>
+
+    <!-- Other sections remain the same as in the second file -->
+    <section id="recipes" class="content reveal">
+        <a href="https://drive.google.com/file/d/10igZ5MBQl_WH97s5tSFM1Jz3wdfkUmrg/view?usp=sharing"><h2>Recipes</h2></a>
+        <div class="cards">
+            <!-- Recipe cards -->
+            <div class="card">
+                <img src="Khichadi.png" alt="Khichdi">
+                <h3>Khichdi</h3>
+                <p>The ultimate comfort food, nutritious and delicious.</p>
+            </div>
+            <div class="card">
+                <img src="Idli.jpg" alt="Idli">
+                <h3>Idli</h3>
+                <p>A fermented and steamed delight from South India.</p>
+            </div>
+            <div class="card">
+                <img src="Sambar.jpg" alt="Sambar">
+                <h3>Sambar</h3>
+                <p>A famous dish with a mysterious origin, which pairs perfectly with Idlis.</p>
+            </div>
+            <div class="card">
+                <img src="PuranPoli.jpg" alt="Puran Poli">
+                <h3>Puran Poli</h3>
+                <p>A delightful treat for anyone who loves sweet flavors!</p>
+            </div>
+            <div class="card">
+                <img src="Dosa.jpg" alt="Dosa">
+                <h3>Dosa</h3>
+                <p>The famous thin and light, savoury crepe.</p>
+            </div>
+            <div class="card">
+                <img src="Pitha.jpg" alt="Pitha">
+                <h3>Pitha</h3>
+                <p>Learn about the Indian version of Pancakes and Fritters!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="health" class="content reveal">
+        <h2>Healthy Eating Practices</h2>
+        <div class="cards">
+            <!-- Health practice cards -->
+            <div class="card">
+                <a href="https://mapi.com/blogs/articles/ten-ayurvedic-dietary-must-dos?srsltid=AfmBOooLTnOiIrepW5BiKaul2G1jc8nZZm-pIEViXSlQ512pKVt8RU-A">
+                <img src="AyurvedicEating.jpg" alt="Ayurvedic Eating Principles">
+                <h3>Ayurvedic Eating Principles</h3>
+                <p>Discover how to balance your Vata, Pitta, and Kapha.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://www.healthline.com/nutrition/seasonal-food#health-benefits">
+                <img src="SeasonalEating.png" alt="Seasonal Eating">
+                <h3>Seasonal Eating</h3>
+                <p>Learn the wisdom of eating seasonal and locally-sourced foods.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://goosebumps.store/blogs/re-inventing-pickles/ancient-indian-food-practices">
+                <img src="DiningEtiquettes.jpg" alt="Dining Etiquettes">
+                <h3>Dining Etiquettes</h3>
+                <p>Learn the importance of ancien Indian etiquettes to promote better digestion.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="kitchens" class="content reveal">
+        <h2>About Ancient Kitchens</h2>
+        <div class="cards">
+            <!-- Kitchen-related cards -->
+            <div class="card">
+                <a href="https://medium.com/@kd.kitchendecor/evolution-of-indian-kitchen-8fd9790f5be8">
+                <img src="KitchenLayout.jpg" alt="Traditional Kitchen">
+                <h3>Traditional Kitchen</h3>
+                <p>Find out how our ancient kitchens actually looked like.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://www.theimperialfarm.com/blog/clay-stove-cooking-a-renaissance-in-healthy-cooking-practice">
+                <img src="ClayStove.jpg" alt="Clay Stoves">
+                <h3>Clay Stoves</h3>
+                <p>Explore the design and functionality of traditional Indian clay stoves.</p>
+                </a>
+            </div>
+            <div class="card">
+                <a href="https://tourdefarm.in/blog/traditional-cooking-champions-earthen-pots-chulhas-matkas-more/">
+                <img src="TraditionalUtensils.jpg" alt="Traditional Utensils">
+                <h3>Traditional Utensils</h3>
+                <p>Learn about the use of brass, copper, and earthen cookware in ancient kitchens.</p>
+                </a>
+            </div>s
+        </div>
+    </section>
+
+    <section id="regional-map" class="content reveal">
+        <h2>Cuisine Map</h2>
+        <div id="map"></div>
+    </section>
+
+    <section id="quiz" class="content reveal">
+        <div class="quiz-container">
+            <h2 style="text-align: center;">Test Your Knowledge of Ancient Indian Cooking!</h2>
+            <div id="quiz-questions"></div>
+            <button onclick="submitQuiz()">Submit Quiz</button>
+            <div id="quiz-result"></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; <a href="https://iksindia.org/">IKS</a> Group 11: Satvik Ahara. Exploring our ancient culinary traditions.</p>
+    </footer>
+
+    <script>
+        // Map Initialization Function
+        function initMap() {
+            const map = L.map('map').setView([20.5937, 78.9629], 4);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            const regions = [
+                { name: 'North India', lat: 28.6139, lon: 77.2090, cuisine: 'Tandoori, Roti, Rich Gravies' },
+                { name: 'South India', lat: 13.0827, lon: 80.2707, cuisine: 'Dosa, Idli, Rice-based Dishes' },
+                { name: 'East India', lat: 22.5726, lon: 88.3639, cuisine: 'Fish Curries, Pitha, Sweets' },
+                { name: 'West India', lat: 19.0760, lon: 72.8777, cuisine: 'Gujarati Thali, Puran Poli' }
+            ];
+
+            regions.forEach(region => {
+                L.marker([region.lat, region.lon])
+                    .addTo(map)
+                    .bindPopup(`<b>${region.name}</b><br>Cuisine: ${region.cuisine}`);
+            });
+        }
+
+        // Quiz Questions
+        const quizQuestions = [
+            {
+                question: "What is 'Bhojanapaka'?",
+                options: [
+                    "A modern cooking technique",
+                    "Ancient Indian open flame cooking method",
+                    "A type of spice",
+                    "A kitchen utensil"
+                ],
+                correct: 1
+            },
+            {
+                question: "What does 'Ritucharya' refer to?",
+                options: [
+                    "A cooking method",
+                    "A type of spice",
+                    "Seasonal eating practices",
+                    "A religious ritual"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which tool was traditionally used for grinding spices?",
+                options: [
+                    "Blender",
+                    "Food processor",
+                    "Sil-batta",
+                    "Electric grinder"
+                ],
+                correct: 2
+            }
+        ];
+
+        function renderQuiz() {
+            const quizContainer = document.getElementById('quiz-questions');
+            quizQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('quiz-question');
+                questionDiv.innerHTML = `
+                    <p>${q.question}</p>
+                    <div class="quiz-options">
+                        ${q.options.map((option, i) => `
+                            <label>
+                                <input type="radio" name="question${index}" value="${i}">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizQuestions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selected && parseInt(selected.value) === q.correct) {
+                    score++;
+                }
+            });
+
+            const quizResult = document.getElementById('quiz-result');
+            quizResult.innerHTML = `<p>You scored ${score} out of ${quizQuestions.length}!</p>`;
+
+            quizQuestions.forEach((_, index) => {
+                const options = document.querySelectorAll(`input[name="question${index}"]`);
+                options.forEach(option => {
+                    option.checked = false;
+                });
+            });
+        }
+
+        // Scroll Reveal Function
+        function scrollReveal() {
+            const reveals = document.querySelectorAll('.card, .reveal');
+            reveals.forEach((reveal, index) => {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.classList.add('active');
+                    if (reveal.classList.contains('card')) {
+                        reveal.style.setProperty('--i', index);
+                    }
+                } else {
+                    reveal.classList.remove('active');
+                }
+            });
+        }
+
+        // Smooth Scroll Function
+        function smoothScroll() {
+            const navLinks = document.querySelectorAll('.navbar ul li a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            });
+        }
+
+        // Scroll to Content Function
+        function scrollToContent() {
+            document.getElementById('methods').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Page Load Initialization
+        window.onload = function() {
+            initMap();
+            renderQuiz();
+            smoothScroll();
+            
+            window.addEventListener('scroll', scrollReveal);
+            scrollReveal();
+        }
+    </script>
+</body>
+</html>

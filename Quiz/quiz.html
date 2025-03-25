@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212; /* Dark grey/black */
+            color: #f1f1f1; /* Light grey/white */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('placeholder1.jpg'); /* Optional */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .quiz-container {
+            background: #1e1e1e; /* Slightly lighter grey */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 600px;
+            animation: fadeIn 1s ease;
+            border: 2px solid #444; /* Medium grey */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #f1f1f1;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin: 10px 0;
+        }
+
+        .options button {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #444; /* Medium grey border */
+            border-radius: 5px;
+            background: #333; /* Dark grey */
+            color: #f1f1f1;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .options button:hover {
+            background: #555; /* Lighter grey on hover */
+            color: #fff; /* White text */
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .score {
+            font-size: 1.8em;
+            margin-top: 20px;
+            text-align: center;
+            color: #f1f1f1;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: 2px solid #444;
+            background: #333;
+            color: #f1f1f1;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .controls button:hover {
+            background: #555;
+            color: #fff;
+        }
+
+        .media img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 3px solid #444;
+            animation: fadeIn 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="question-container">
+            <div class="media">
+                <img src="placeholder.jpg" alt="Quiz Image">
+            </div>
+            <div class="question">Question text will appear here.</div>
+            <ul class="options"></ul>
+        </div>
+        <div class="controls">
+            <button class="reset hidden">Reset Quiz</button>
+        </div>
+        <div class="score hidden"></div>
+    </div>
+
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0"></script>
+    <script>
+        const questions = [
+        {
+                category: "Indian Architecture",
+                question: "Which Mughal emperor built the Taj Mahal?",
+                options: ["Akbar", "Shah Jahan", "Aurangzeb", "Jahangir"],
+                answer: 1,
+                media: "tajmahal.jpg"
+            },
+            {
+                category: "Temple Architecture",
+                question: "Which temple is known as the 'Great Living Chola Temple'?",
+                options: ["Konark Sun Temple","Meenakshi Temple", "Brihadeeswarar Temple", "Khajuraho Temples"],
+                answer: 2,
+                media: "brihadeshwara.jpg"
+            },
+            {
+                category: "Buddhist Heritage",
+                question: "The Ajanta Caves, are located in which Indian state?",
+                options: ["Madhya Pradesh", "Bihar", "Uttar Pradesh", "Maharashtra"],
+                answer: 3,
+                media: "ajanta.jpeg"
+            },
+            {
+                category: "Medieval India",
+                question: "Which fort served as the main residence of Mughal Emperors?",
+                options: ["Golconda Fort", "Agra Fort", "Amber Fort", "Red Fort"],
+                answer: 3,
+                media: "redfort.jpg"
+            },
+            {
+                category: "Natural Heritage",
+                question: "Which national park is famous for its one-horned rhinoceros?",
+                options: ["Kaziranga", "Sundarbans", "Ranthambore", "Jim Corbett"],
+                answer: 0,
+                media: "kaziranga.jpg"
+            },
+            {
+                category: "Historical Monuments",
+                question: "The Shore Temple, is located in which ancient port city?",
+                options: ["Mahabalipuram", "Puri", "Dwarka", "Cochin"],
+                answer: 0,
+                media: "shoretemple.jpg"
+            },
+            {
+                category: "Sacred Sites",
+                question: "Which city is known as the oldest continuously inhabited city in the world?",
+                options: ["Mathura", "Varnasi", "Amritsar", "Haridwar"],
+                answer: 1,
+                media: "varanasi.jpg"
+            },
+            {
+                category: "Modern Heritage",
+                question: "Which railway station in Mumbai is a UNESCO World Heritage site?",
+                options: [ "Howrah Station", "New Delhi Station","Chhatrapati Shivaji Terminus", "Victoria Terminus"],
+                answer: 2,
+                media: "csmt.jpg"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const questionEl = document.querySelector('.question');
+        const optionsEl = document.querySelector('.options');
+        const scoreEl = document.querySelector('.score');
+        const resetBtn = document.querySelector('.reset');
+        const mediaEl = document.querySelector('.media img');
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionEl.textContent = question.question;
+            mediaEl.src = question.media || '';
+            optionsEl.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(index));
+                const listItem = document.createElement('li');
+                listItem.appendChild(button);
+                optionsEl.appendChild(listItem);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (selectedIndex === questions[currentQuestionIndex].answer) {
+                score++;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            document.querySelector('.question-container').classList.add('hidden');
+            resetBtn.classList.remove('hidden');
+            scoreEl.textContent = `Your score: ${score}/${questions.length}`;
+            scoreEl.classList.remove('hidden');
+            launchConfetti();
+        }
+
+        function launchConfetti() {
+            const duration = 3 * 1000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
+        resetBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.querySelector('.question-container').classList.remove('hidden');
+            resetBtn.classList.add('hidden');
+            scoreEl.classList.add('hidden');
+            loadQuestion();
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
